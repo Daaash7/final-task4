@@ -21,23 +21,23 @@ const (
 func parsePackage(data string) (int, time.Duration, error) {
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
-		return 0, 0, errors.New("неверный ввод")
+		return 0, 0, errors.New("incorrect input")
 	}
 
 	steps, err := strconv.Atoi(parts[0])
 	if err != nil {
-		return 0, 0, errors.New("не удалось преобразовать количество шагов")
+		return 0, 0, err
 	}
 	if steps <= 0 {
-		return 0, 0, errors.New("количество шагов должно быть больше нуля")
+		return 0, 0, errors.New("the numbers of steps must be greater than zero")
 	}
 
 	duration, err := time.ParseDuration(parts[1])
 	if err != nil {
-		return 0, 0, errors.New("не удалось преобразовать продолжительность прогулки")
+		return 0, 0, err
 	}
 	if duration <= 0 {
-		return 0, 0, errors.New("продолжительность прогулки должна быть положительной")
+		return 0, 0, errors.New("the duration of the walk should be positive")
 	}
 
 	return steps, duration, nil
@@ -46,7 +46,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 func DayActionInfo(data string, weight, height float64) string {
 	steps, duration, err := parsePackage(data)
 	if err != nil {
-		log.Printf("Ошибка: %s", err.Error())
+		log.Printf("error: %s", err.Error())
 		return ""
 	}
 
@@ -54,7 +54,7 @@ func DayActionInfo(data string, weight, height float64) string {
 
 	calories, err := spentcalories.WalkingSpentCalories(steps, weight, height, duration)
 	if err != nil {
-		log.Printf("Ошибка при вычислении калорий: %s", err.Error())
+		log.Printf("error in calculating calories: %s", err.Error())
 		return ""
 	}
 
